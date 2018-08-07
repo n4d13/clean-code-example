@@ -2,22 +2,23 @@ package db
 
 import (
 	"github.com/go-redis/redis"
-	"github.com/n4d13/clean-code-example/src/config"
+	"time"
 )
 
 type RedisConnection struct {
 	client *redis.Client
 }
 
-func MakeRedisConnection() (*RedisConnection, error) {
+func MakeRedisConnection(address string, dialTimeout time.Duration, readTimeout time.Duration,
+	writeTimeout time.Duration, poolSize int, poolTimeout time.Duration) (*RedisConnection, error) {
 
 	client := redis.NewClient(&redis.Options{
-		Addr:         config.GetInstance().Address(),
-		DialTimeout:  config.GetInstance().DialTimeout,
-		ReadTimeout:  config.GetInstance().ReadTimeout,
-		WriteTimeout: config.GetInstance().WriteTimeout,
-		PoolSize:     config.GetInstance().PoolSize,
-		PoolTimeout:  config.GetInstance().PoolTimeout,
+		Addr:         address,
+		DialTimeout:  dialTimeout,
+		ReadTimeout:  readTimeout,
+		WriteTimeout: writeTimeout,
+		PoolSize:     poolSize,
+		PoolTimeout:  poolTimeout,
 	})
 	_, connErr := client.Ping().Result()
 
