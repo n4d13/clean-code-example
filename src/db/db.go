@@ -13,46 +13,40 @@ type RedisConnection struct {
 
 func MakeRedisConnection() (*RedisConnection, error) {
 
-	//Obtenemos el address de configuración
 	address := config.GetInstance().Host+":"+config.GetInstance().Port
 
-	//Obtenemos el Dial timeout
-	intDtmt, err := strconv.Atoi(config.GetInstance().DialTimeout)
+	dialTimeout, err := strconv.Atoi(config.GetInstance().DialTimeout)
 	if err != nil{
 		return nil, err
 	}
 
-	//Obtenemos el Read timeout
-	intRtmt, err := strconv.Atoi(config.GetInstance().ReadTimeout)
+	readTimeout, err := strconv.Atoi(config.GetInstance().ReadTimeout)
 	if err != nil{
 		return nil, err
 	}
 
-	//Obtenemos el Write timeout
-	intWtmt, err := strconv.Atoi(config.GetInstance().WriteTimeout)
+	writeTimeout, err := strconv.Atoi(config.GetInstance().WriteTimeout)
 	if err != nil{
 		return nil, err
 	}
 
-	//Obtenemos el tamaño del pool
-	intPSize, err := strconv.Atoi(config.GetInstance().PoolSize)
+	poolSize, err := strconv.Atoi(config.GetInstance().PoolSize)
 	if err != nil{
 		return nil, err
 	}
 
-	//Obtenemos el pool timeout
-	intPtmt, err := strconv.Atoi(config.GetInstance().PoolTimeout)
+	poolTimeout, err := strconv.Atoi(config.GetInstance().PoolTimeout)
 	if err != nil{
 		return nil, err
 	}
 
 	client := redis.NewClient(&redis.Options{
 		Addr:         address,
-		DialTimeout:  time.Duration(intDtmt) * time.Second,
-		ReadTimeout:  time.Duration(intRtmt) * time.Second,
-		WriteTimeout: time.Duration(intWtmt) * time.Second,
-		PoolSize:     intPSize,
-		PoolTimeout:  time.Duration(intPtmt) * time.Second,
+		DialTimeout:  time.Duration(dialTimeout) * time.Second,
+		ReadTimeout:  time.Duration(readTimeout) * time.Second,
+		WriteTimeout: time.Duration(writeTimeout) * time.Second,
+		PoolSize:     poolSize,
+		PoolTimeout:  time.Duration(poolTimeout) * time.Second,
 	})
 	_, connErr := client.Ping().Result()
 
