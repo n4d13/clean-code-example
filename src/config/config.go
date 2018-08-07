@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"sync"
 )
 
 type ConfigurationManager struct {
@@ -15,9 +16,10 @@ type ConfigurationManager struct {
 }
 
 var instance *ConfigurationManager
+var once sync.Once
 
 func GetInstance() *ConfigurationManager {
-	if instance == nil {
+	once.Do(func(){
 		instance = &ConfigurationManager{
 			Host:         os.Getenv("REDIS_HOST"),
 			Port:         os.Getenv("REDIS_PORT"),
@@ -27,6 +29,6 @@ func GetInstance() *ConfigurationManager {
 			PoolSize:     os.Getenv("REDIS_POOL_SIZE"),
 			PoolTimeout:  os.Getenv("REDIS_POOL_TIMEOUT"),
 		}
-	}
+	})
 	return instance
 }
